@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NVST Tech — Tecnologia Independente</title>
+  <link rel="icon" type="image/x-icon" href="nvst_logo.ico">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .project-card { display:flex;flex-direction:column;gap:28px;padding:40px;text-decoration:none;color:inherit; }
+    .card-icon { width:64px;height:64px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;box-shadow:0 8px 32px rgba(0,0,0,0.4);transition:transform .28s,box-shadow .28s; }
+    .project-card:hover .card-icon { transform:scale(1.08) rotate(-3deg);box-shadow:0 16px 48px rgba(0,0,0,0.5); }
+    .arrow-circle { width:38px;height:38px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:.8rem;transition:all .28s;flex-shrink:0; }
+    .project-card:hover .arrow-circle { background:rgba(255,255,255,0.1);transform:translateX(4px);color:var(--text); }
+    .check-item { display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--text-dim); }
+    .check-item i { color:#3ecf6e;font-size:.65rem; }
+    .pill { display:inline-block;padding:3px 12px;border-radius:999px;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase; }
+    .pill-purple { background:rgba(109,74,255,.14);border:1px solid rgba(109,74,255,.28);color:#a38cf4; }
+    .pill-blue   { background:rgba(77,159,255,.14);border:1px solid rgba(77,159,255,.28);color:#7bb8ff; }
+    .logo-wrap { position:relative;display:inline-flex;align-items:center;justify-content:center; }
+    .logo-ring { position:absolute;border-radius:50%;border:1px solid rgba(139,111,255,.25); }
+    .section { position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:0 32px; }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.85)} }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas" data-accent="109,74,255"></canvas>
+  <div class="nebula nebula-1"></div>
+  <div class="nebula nebula-2"></div>
+  <div class="nebula nebula-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="nav">
+    <a href="" class="nav-brand">
+      <img src="nvst_logo.png" class="nav-logo" alt="NVST Tech">
+      <span class="nav-wordmark">NVST</span>
+      <span style="color:var(--text-faint);font-size:.7rem;font-weight:500;letter-spacing:.05em;margin-left:2px">TECH</span>
+    </a>
+    <div class="nav-links">
+      <a href="monitor-pg/"    class="nav-link">Monitor PG</a>
+      <a href="macro-clicker/" class="nav-link">MacroClicker</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="section" style="padding-top:80px;padding-bottom:100px">
+    <div style="display:flex;align-items:center;gap:64px;flex-wrap:wrap">
+      <div style="flex:1;min-width:300px">
+        <div class="badge badge-purple reveal" style="margin-bottom:28px">
+          <span style="width:7px;height:7px;background:#3ecf6e;border-radius:50%;animation:pulse-dot 2s ease infinite"></span>
+          Tecnologia Independente &nbsp;·&nbsp; Feito no Brasil
+        </div>
+        <h1 style="font-size:clamp(2.8rem,5vw,4.5rem);font-weight:900;line-height:1.1;letter-spacing:-.02em;margin-bottom:24px" class="reveal reveal-delay-1">
+          Software que<br><span class="grad-purple">trabalha por você.</span>
+        </h1>
+        <p style="font-size:1.1rem;color:var(--text-dim);line-height:1.75;max-width:460px;margin-bottom:40px" class="reveal reveal-delay-2">
+          Apps práticos, dark e sem frescura.<br>Privacidade real, sem dependência de big techs.
+        </p>
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap" class="reveal reveal-delay-3">
+          <div style="display:flex;align-items:center;gap:8px;color:var(--text-dim);font-size:.85rem"><i class="fas fa-robot" style="color:#a38cf4"></i> Automação</div>
+          <span style="color:var(--text-faint)">·</span>
+          <div style="display:flex;align-items:center;gap:8px;color:var(--text-dim);font-size:.85rem"><i class="fas fa-wallet" style="color:#a38cf4"></i> Finanças</div>
+          <span style="color:var(--text-faint)">·</span>
+          <div style="display:flex;align-items:center;gap:8px;color:var(--text-dim);font-size:.85rem"><i class="fas fa-server" style="color:#a38cf4"></i> Autohosting</div>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;justify-content:center;align-items:center;min-width:260px" class="reveal reveal-delay-2">
+        <div class="logo-wrap">
+          <div class="logo-ring ring-pulse-slow" style="width:280px;height:280px"></div>
+          <div class="logo-ring ring-pulse"       style="width:220px;height:220px;border-color:rgba(139,111,255,.35)"></div>
+          <div class="logo-ring"                  style="width:160px;height:160px;border-color:rgba(139,111,255,.15)"></div>
+          <img src="nvst_logo.png" alt="NVST Robot"
+               style="width:140px;height:140px;position:relative;z-index:2;animation:phone-float 5s ease-in-out infinite;filter:drop-shadow(0 0 24px rgba(139,111,255,.5))">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider section"></div>
+
+  <!-- PROJECTS -->
+  <section class="section" style="padding-top:80px;padding-bottom:80px">
+    <div style="text-align:center;margin-bottom:56px" class="reveal">
+      <p class="section-label" style="color:var(--text-faint)">Projetos</p>
+      <h2 style="font-size:2.5rem;font-weight:900;letter-spacing:-.02em">Nossos <span class="grad-purple">apps</span></h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px">
+
+      <a href="monitor-pg/" class="glass glass-purple project-card reveal reveal-delay-1">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div class="card-icon" style="background:linear-gradient(135deg,#3d1a8a,#6d4aff)"><i class="fas fa-wallet" style="color:#fff"></i></div>
+          <div class="arrow-circle"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <span style="font-size:1.3rem;font-weight:800">Monitor PG</span>
+            <span class="pill pill-purple">Android</span>
+          </div>
+          <p style="color:var(--text-dim);font-size:.88rem;line-height:1.7">Gerencie pagamentos mensais no Android. Dados protegidos via token em VPS privada, alertas de vencimento e visão mensal completa.</p>
+        </div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div class="check-item"><i class="fas fa-circle-check"></i> Gratuito</div>
+          <div class="check-item"><i class="fas fa-circle-check"></i> VPS privada</div>
+          <div class="check-item"><i class="fas fa-circle-check"></i> Android 8+</div>
+        </div>
+      </a>
+
+      <a href="macro-clicker/" class="glass glass-blue project-card reveal reveal-delay-2">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div class="card-icon" style="background:linear-gradient(135deg,#0d2548,#1a6edb);padding:6px"><img src="macro-clicker/logo.png" style="width:44px;height:44px" alt="MacroClicker"></div>
+          <div class="arrow-circle"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <span style="font-size:1.3rem;font-weight:800">MacroClicker Pro</span>
+            <span class="pill pill-blue">Windows</span>
+          </div>
+          <p style="color:var(--text-dim);font-size:.88rem;line-height:1.7">Auto clicker + gravador de macros + script de teclas para Windows. Dark, leve, sem instalação. Hotkeys capturáveis com um clique.</p>
+        </div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div class="check-item"><i class="fas fa-circle-check"></i> Gratuito</div>
+          <div class="check-item"><i class="fas fa-circle-check"></i> Sem instalação</div>
+          <div class="check-item"><i class="fas fa-circle-check"></i> Windows 10/11</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <div class="divider section"></div>
+
+  <footer class="footer">
+    <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:16px">
+      <img src="nvst_logo.png" style="width:28px;height:28px;opacity:.5" alt="NVST">
+      <span style="font-size:.8rem;font-weight:800;letter-spacing:.14em;color:var(--text-faint)">NVST TECH</span>
+    </div>
+    <p style="font-size:.75rem;color:var(--text-faint)">&copy; 2026 Tecnologia Nvst — Feito com autonomia.</p>
+  </footer>
+
+  <script src="bg.js"></script>
+  <script src="reveal.js"></script>
+</body>
+</html>
