@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoClean | Limpeza Automática para Windows</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .section{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:0 32px;}
+
+    /* Teal theme overrides */
+    .nebula-1{background:radial-gradient(circle,rgba(20,184,166,.18),transparent 70%)!important}
+    .nebula-2{background:radial-gradient(circle,rgba(6,148,130,.13),transparent 70%)!important}
+    .nebula-3{background:radial-gradient(circle,rgba(20,184,166,.08),transparent 70%)!important}
+
+    :root{
+      --ac:#2dd4bf; --ac2:#5eead4; --ac3:#0d5c52;
+      --ac-soft:rgba(45,212,191,.1); --ac-border:rgba(45,212,191,.25);
+    }
+
+    .badge-ac{background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.28);color:#2dd4bf;}
+    .grad-ac{background:linear-gradient(135deg,#2dd4bf,#5eead4 60%,#a7f3d0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .btn-ac{background:linear-gradient(135deg,#0d5c52,#2dd4bf);box-shadow:0 0 0 rgba(45,212,191,0);transition:all .28s;color:#fff;}
+    .btn-ac:hover{box-shadow:0 8px 40px rgba(45,212,191,.5);transform:translateY(-2px);}
+    .glass-ac:hover{border-color:rgba(45,212,191,.3)!important;background:rgba(45,212,191,.05)!important;}
+    .icon-box-ac{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.18);transition:transform .28s;}
+    .glass:hover .icon-box-ac{transform:scale(1.1);}
+    .stat-ac{background:rgba(45,212,191,.07);border:1px solid rgba(45,212,191,.14);border-radius:18px;padding:22px 20px;text-align:center;transition:transform .28s;}
+    .stat-ac:hover{transform:translateY(-3px);}
+    .step-ac{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:#2dd4bf;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.3);flex-shrink:0;}
+
+    /* App window mockup */
+    .app-frame-ac{
+      background:linear-gradient(145deg,#030f0e,#020a09);
+      border:1px solid rgba(45,212,191,.15);
+      border-radius:14px;
+      box-shadow:0 50px 100px rgba(0,0,0,.7),0 0 80px rgba(45,212,191,.08),inset 0 1px 0 rgba(45,212,191,.07);
+      overflow:hidden;
+      animation:app-float 5s ease-in-out infinite;
+    }
+
+    /* Warning card */
+    .warn-card{background:rgba(234,179,8,.05);border:1px solid rgba(234,179,8,.22);border-radius:18px;padding:28px 32px;}
+
+    @keyframes pulse-ac{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas" data-accent="45,212,191"></canvas>
+  <div class="nebula nebula-1"></div>
+  <div class="nebula nebula-2"></div>
+  <div class="nebula nebula-3"></div>
+  <div class="grid-overlay"></div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="" class="nav-brand">
+      <img src="logo.png"
+           style="width:34px;height:34px;filter:drop-shadow(0 0 8px rgba(45,212,191,.65))"
+           alt="AutoClean">
+      <span style="font-size:1rem;font-weight:800;letter-spacing:.06em">
+        AUTO<span style="color:#2dd4bf">CLEAN</span>
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="../" class="nav-link">
+        <i class="fas fa-home" style="font-size:.7rem;margin-right:4px"></i>Início
+      </a>
+      <a href="../monitor-pg/" class="nav-link">
+        <i class="fas fa-wallet" style="font-size:.7rem;margin-right:4px"></i>Monitor PG
+      </a>
+      <a href="../macro-clicker/" class="nav-link">
+        <i class="fas fa-bolt" style="font-size:.7rem;margin-right:4px"></i>MacroClicker
+      </a>
+      <a href="downloader/AutoClean.exe" download
+         onclick="document.getElementById('pb').style.display='block';setTimeout(()=>document.getElementById('pb').style.display='none',4000)"
+         style="display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:999px;font-size:.75rem;font-weight:600;text-decoration:none;transition:all .28s;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.28);color:#2dd4bf;">
+        <i class="fas fa-download"></i> Baixar .exe
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="section" style="padding-top:80px;padding-bottom:100px">
+    <div style="display:flex;align-items:center;gap:72px;flex-wrap:wrap">
+
+      <!-- Text -->
+      <div style="flex:1;min-width:300px">
+        <div class="badge badge-ac reveal" style="display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:999px;font-size:.72rem;font-weight:600;margin-bottom:28px">
+          <span style="width:7px;height:7px;background:#2dd4bf;border-radius:50%;animation:pulse-ac 2s ease infinite"></span>
+          Windows 10 / 11 &nbsp;·&nbsp; Gratuito &nbsp;·&nbsp; Sem instalação
+        </div>
+
+        <h1 style="font-size:clamp(2.6rem,5vw,4.2rem);font-weight:900;line-height:1.1;letter-spacing:-.02em;margin-bottom:24px" class="reveal reveal-delay-1">
+          Seu Windows<br>limpo e <span class="grad-ac">rápido.</span>
+        </h1>
+
+        <p style="font-size:1.05rem;color:var(--text-dim);line-height:1.8;max-width:480px;margin-bottom:36px" class="reveal reveal-delay-2">
+          Limpeza automática de arquivos temporários, cache, lixeira e logs do sistema — em um único clique. Leve, rápido e sem deixar rastros.
+        </p>
+
+        <!-- Download -->
+        <div class="reveal reveal-delay-3" style="display:flex;flex-direction:column;gap:12px;max-width:340px">
+          <a href="downloader/AutoClean.exe" download
+             onclick="document.getElementById('pb').style.display='block';setTimeout(()=>document.getElementById('pb').style.display='none',4000)"
+             class="btn btn-ac"
+             style="display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:16px 36px;border-radius:14px;font-weight:700;font-size:1rem;text-decoration:none;">
+            <i class="fas fa-download" style="font-size:1.1rem"></i> Baixar AutoClean
+          </a>
+          <div id="pb" class="progress-bar"
+               style="background:linear-gradient(90deg,#0d5c52,#2dd4bf,#a7f3d0);background-size:200%;animation:shimmer 1.8s linear infinite;display:none;height:3px;border-radius:2px"></div>
+          <div style="display:flex;gap:20px;flex-wrap:wrap;padding-left:4px">
+            <span style="font-size:.72rem;color:var(--text-faint);display:flex;align-items:center;gap:6px">
+              <i class="fas fa-shield-halved" style="color:#2dd4bf"></i>Sem vírus
+            </span>
+            <span style="font-size:.72rem;color:var(--text-faint);display:flex;align-items:center;gap:6px">
+              <i class="fas fa-box-open" style="color:#2dd4bf"></i>Sem instalação
+            </span>
+            <span style="font-size:.72rem;color:var(--text-faint);display:flex;align-items:center;gap:6px">
+              <i class="fas fa-microchip" style="color:#2dd4bf"></i>~2.7 MB
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- App window mockup -->
+      <div style="flex:1;display:flex;justify-content:center;min-width:240px" class="reveal reveal-delay-2">
+        <div class="app-frame-ac" style="width:300px">
+
+          <!-- Title bar -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#010908;border-bottom:1px solid rgba(45,212,191,.1)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <img src="logo.png" style="width:14px;height:14px" alt="">
+              <span style="font-size:.7rem;font-weight:700;color:var(--text-dim)">AutoClean</span>
+            </div>
+            <div style="display:flex;gap:5px">
+              <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.06)"></div>
+              <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.06)"></div>
+              <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.06)"></div>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div style="padding:20px 18px;background:#030f0d">
+            <!-- Stats -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+              <div style="background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.15);border-radius:10px;padding:12px;text-align:center">
+                <p style="font-size:1.1rem;font-weight:900;color:#2dd4bf">3.2 GB</p>
+                <p style="font-size:.6rem;color:var(--text-faint);margin-top:2px">Encontrado</p>
+              </div>
+              <div style="background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.15);border-radius:10px;padding:12px;text-align:center">
+                <p style="font-size:1.1rem;font-weight:900;color:#5eead4">1.8 GB</p>
+                <p style="font-size:.6rem;color:var(--text-faint);margin-top:2px">Liberado</p>
+              </div>
+            </div>
+
+            <!-- Category list -->
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.03);border-radius:10px;padding:9px 12px">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:22px;height:22px;border-radius:7px;background:rgba(45,212,191,.12);display:flex;align-items:center;justify-content:center">
+                    <i class="fas fa-clock" style="font-size:.55rem;color:#2dd4bf"></i>
+                  </div>
+                  <span style="font-size:.72rem;color:var(--text-dim)">Arquivos temp</span>
+                </div>
+                <span style="font-size:.7rem;font-weight:700;color:#2dd4bf">1.2 GB</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.03);border-radius:10px;padding:9px 12px">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:22px;height:22px;border-radius:7px;background:rgba(45,212,191,.12);display:flex;align-items:center;justify-content:center">
+                    <i class="fas fa-hard-drive" style="font-size:.55rem;color:#2dd4bf"></i>
+                  </div>
+                  <span style="font-size:.72rem;color:var(--text-dim)">Cache de apps</span>
+                </div>
+                <span style="font-size:.7rem;font-weight:700;color:#2dd4bf">890 MB</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.03);border-radius:10px;padding:9px 12px">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:22px;height:22px;border-radius:7px;background:rgba(45,212,191,.12);display:flex;align-items:center;justify-content:center">
+                    <i class="fas fa-trash" style="font-size:.55rem;color:#2dd4bf"></i>
+                  </div>
+                  <span style="font-size:.72rem;color:var(--text-dim)">Lixeira</span>
+                </div>
+                <span style="font-size:.7rem;font-weight:700;color:#4ade80">✓ Limpo</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.03);border-radius:10px;padding:9px 12px">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:22px;height:22px;border-radius:7px;background:rgba(45,212,191,.12);display:flex;align-items:center;justify-content:center">
+                    <i class="fas fa-file-alt" style="font-size:.55rem;color:#2dd4bf"></i>
+                  </div>
+                  <span style="font-size:.72rem;color:var(--text-dim)">Logs do sistema</span>
+                </div>
+                <span style="font-size:.7rem;font-weight:700;color:#2dd4bf">140 MB</span>
+              </div>
+            </div>
+
+            <!-- Clean button -->
+            <div style="border-radius:12px;padding:13px;text-align:center;font-size:.85rem;font-weight:700;background:linear-gradient(135deg,#0d5c52,#2dd4bf);box-shadow:0 0 18px rgba(45,212,191,.28)">
+              ✨ Limpar Agora
+            </div>
+          </div>
+
+          <!-- Status bar -->
+          <div style="padding:7px 14px;background:#010908;border-top:1px solid rgba(255,255,255,.04);font-size:.65rem;color:var(--text-faint)">
+            ■ Pronto para varrer o sistema
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider section"></div>
+
+  <!-- AVISO DEFENDER -->
+  <section class="section" style="padding:48px 32px">
+    <div class="warn-card reveal" style="display:flex;align-items:flex-start;gap:20px;max-width:860px;margin:0 auto">
+      <div style="width:52px;height:52px;border-radius:14px;background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="fas fa-shield-halved" style="color:#fbbf24;font-size:1.3rem"></i>
+      </div>
+      <div>
+        <p style="font-weight:700;color:#fcd34d;margin-bottom:8px;font-size:1rem">
+          ⚠️ O Windows Defender pode alertar — é completamente normal!
+        </p>
+        <p style="font-size:.88rem;color:var(--text-dim);line-height:1.8">
+          O AutoClean acessa pastas do sistema para realizar a limpeza, e por isso o Windows Defender pode exibir um aviso de segurança ao executar o arquivo.
+          <strong style="color:var(--text)">O app é 100% seguro</strong> — ele apenas remove arquivos temporários, cache e logs. O alerta ocorre porque o executável não possui assinatura digital paga (certificado de desenvolvedor), não porque seja perigoso.
+          <br><br>
+          Para prosseguir: clique em
+          <strong style="color:#fcd34d">"Mais informações"</strong> → <strong style="color:#fcd34d">"Executar assim mesmo"</strong>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider section"></div>
+
+  <!-- STATS -->
+  <section class="section" style="padding:64px 32px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div class="stat-ac reveal reveal-delay-1">
+        <p style="font-size:2rem;font-weight:900;color:#2dd4bf;margin-bottom:4px">1 clique</p>
+        <p style="font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-faint)">Limpeza total</p>
+      </div>
+      <div class="stat-ac reveal reveal-delay-2">
+        <p style="font-size:2rem;font-weight:900;color:#2dd4bf;margin-bottom:4px">0</p>
+        <p style="font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-faint)">Instalação</p>
+      </div>
+      <div class="stat-ac reveal reveal-delay-3">
+        <p style="font-size:2rem;font-weight:900;color:#2dd4bf;margin-bottom:4px">100%</p>
+        <p style="font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-faint)">Gratuito</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider section"></div>
+
+  <!-- FEATURES -->
+  <section class="section" style="padding:80px 32px">
+    <div style="text-align:center;margin-bottom:56px" class="reveal">
+      <p class="section-label" style="color:var(--text-faint)">Funcionalidades</p>
+      <h2 style="font-size:2.4rem;font-weight:900;letter-spacing:-.02em">
+        Tudo que você precisa,<br><span class="grad-ac">nada que você não quer.</span>
+      </h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+
+      <div class="glass glass-ac reveal reveal-delay-1" style="padding:32px">
+        <div class="icon-box-ac" style="margin-bottom:20px"><i class="fas fa-clock" style="color:#2dd4bf;font-size:1.1rem"></i></div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:10px">Arquivos Temporários</h3>
+        <p style="font-size:.85rem;color:var(--text-dim);line-height:1.7">Remove todo o lixo gerado pelo Windows e apps no %TEMP%, AppData e pastas de cache do sistema.</p>
+      </div>
+
+      <div class="glass glass-ac reveal reveal-delay-2" style="padding:32px">
+        <div class="icon-box-ac" style="margin-bottom:20px"><i class="fas fa-trash" style="color:#2dd4bf;font-size:1.1rem"></i></div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:10px">Lixeira Automática</h3>
+        <p style="font-size:.85rem;color:var(--text-dim);line-height:1.7">Esvazia a lixeira automaticamente como parte do processo — sem você precisar lembrar.</p>
+      </div>
+
+      <div class="glass glass-ac reveal reveal-delay-3" style="padding:32px">
+        <div class="icon-box-ac" style="margin-bottom:20px"><i class="fas fa-file-alt" style="color:#2dd4bf;font-size:1.1rem"></i></div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:10px">Logs do Sistema</h3>
+        <p style="font-size:.85rem;color:var(--text-dim);line-height:1.7">Elimina logs desnecessários do Windows que acumulam GB sem você perceber.</p>
+      </div>
+
+      <div class="glass glass-ac reveal reveal-delay-1" style="padding:32px">
+        <div class="icon-box-ac" style="margin-bottom:20px"><i class="fas fa-chart-bar" style="color:#2dd4bf;font-size:1.1rem"></i></div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:10px">Relatório de Espaço</h3>
+        <p style="font-size:.85rem;color:var(--text-dim);line-height:1.7">Mostra exatamente quantos GB foram encontrados e liberados em cada categoria antes e depois da limpeza.</p>
+      </div>
+
+      <div class="glass glass-ac reveal reveal-delay-2" style="padding:32px">
+        <div class="icon-box-ac" style="margin-bottom:20px"><i class="fas fa-bolt" style="color:#2dd4bf;font-size:1.1rem"></i></div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:10px">Limpeza em 1 Clique</h3>
+        <p style="font-size:.85rem;color:var(--text-dim);line-height:1.7">Interface simples e direta. Abriu, analisou, limpou. Sem configurações complicadas ou assinaturas.</p>
+      </div>
+
+      <div class="glass glass-ac reveal reveal-delay-3" style="padding:32px">
+        <div class="icon-box-ac" style="margin-bottom:20px"><i class="fas fa-box-open" style="color:#2dd4bf;font-size:1.1rem"></i></div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:10px">Portátil e Leve</h3>
+        <p style="font-size:.85rem;color:var(--text-dim);line-height:1.7">Um único <kbd>.exe</kbd> de ~2.7 MB. Sem instalação, sem entradas no Registro, sem serviços em segundo plano.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider section"></div>
+
+  <!-- STEPS -->
+  <section class="section" style="padding:80px 32px">
+    <div style="text-align:center;margin-bottom:56px" class="reveal">
+      <p class="section-label" style="color:var(--text-faint)">Como usar</p>
+      <h2 style="font-size:2.4rem;font-weight:900;letter-spacing:-.02em">
+        Pronto em <span class="grad-ac">segundos.</span>
+      </h2>
+    </div>
+    <div class="glass" style="padding:48px;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:28px">
+
+      <div style="display:flex;align-items:flex-start;gap:18px" class="reveal reveal-delay-1">
+        <div class="step-ac">1</div>
+        <div>
+          <p style="font-weight:600;margin-bottom:6px">Baixe e execute o <kbd>.exe</kbd></p>
+          <p style="font-size:.85rem;color:var(--text-dim);line-height:1.7">
+            Nenhuma instalação necessária. Se o Defender alertar, clique em
+            <strong style="color:var(--text)">"Mais informações → Executar assim mesmo"</strong> — o aviso é padrão para apps sem assinatura digital paga.
+          </p>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:18px" class="reveal reveal-delay-2">
+        <div class="step-ac">2</div>
+        <div>
+          <p style="font-weight:600;margin-bottom:6px">Clique em "Analisar"</p>
+          <p style="font-size:.85rem;color:var(--text-dim);line-height:1.7">
+            O app varre o sistema e mostra um relatório detalhado de quanto espaço será liberado em cada categoria.
+          </p>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:18px" class="reveal reveal-delay-3">
+        <div class="step-ac">3</div>
+        <div>
+          <p style="font-weight:600;margin-bottom:6px">Clique em "Limpar Agora"</p>
+          <p style="font-size:.85rem;color:var(--text-dim);line-height:1.7">
+            A limpeza é feita instantaneamente. O Windows fica mais rápido e com espaço de volta em segundos.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider section"></div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:14px">
+      <img src="../nvst_logo.png"
+           style="width:28px;height:28px;border-radius:50%;opacity:.55;filter:drop-shadow(0 0 6px rgba(140,80,240,.5))"
+           alt="NVST">
+      <span style="font-size:.72rem;font-weight:800;letter-spacing:.14em;color:var(--text-faint)">NVST TECH</span>
+    </div>
+    <p style="font-size:.72rem;color:var(--text-faint)">
+      &copy; 2026 AutoClean —
+      <a href="../" style="color:var(--text-faint);text-decoration:none;transition:color .2s"
+         onmouseover="this.style.color='#2dd4bf'" onmouseout="this.style.color='var(--text-faint)'">
+        Ver todos os projetos
+      </a>
+    </p>
+  </footer>
+
+  <script src="../bg.js"></script>
+  <script src="../reveal.js"></script>
+</body>
+</html>
