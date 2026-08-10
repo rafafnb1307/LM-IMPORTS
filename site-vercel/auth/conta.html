@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Minha Conta — NVST Tech</title>
+<link rel="icon" href="../nvst_logo.ico">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+.wrap{position:relative;z-index:10;max-width:680px;margin:0 auto;padding:40px 24px 80px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:44px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand img{width:34px;height:34px;border-radius:50%;border:1px solid rgba(140,80,240,.35)}
+.brand span{font-size:.95rem;font-weight:800;letter-spacing:.05em;color:var(--text)}
+.brand sub{font-size:.58rem;color:var(--text-faint);letter-spacing:.06em}
+.btn-sair{background:rgba(140,80,240,.1);border:1px solid rgba(140,80,240,.22);color:#c4a0ff;font-size:.82rem;font-weight:600;font-family:inherit;padding:8px 18px;border-radius:10px;cursor:pointer;transition:.22s}
+.btn-sair:hover{background:rgba(140,80,240,.2)}
+.card{background:rgba(10,4,30,.88);border:1px solid rgba(140,80,240,.22);border-radius:24px;padding:32px;margin-bottom:18px;backdrop-filter:blur(20px)}
+.card-title{font-size:.88rem;font-weight:700;color:#c4a0ff;text-transform:uppercase;letter-spacing:.08em;margin-bottom:22px;display:flex;align-items:center;gap:8px}
+/* Plano */
+.plano-badge{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(140,80,240,.18),rgba(109,50,200,.12));border:1px solid rgba(140,80,240,.3);border-radius:14px;padding:12px 20px;font-weight:800;font-size:1.05rem;margin-bottom:18px}
+.plano-badge.sem{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08);color:var(--text-dim);font-size:.92rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{background:rgba(140,80,240,.06);border:1px solid rgba(140,80,240,.12);border-radius:14px;padding:16px}
+.stat .lbl{font-size:.68rem;color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.stat .val{font-size:.92rem;font-weight:700;color:var(--text)}
+.stat .val.warn{color:#ffb347}
+.stat .val.ok{color:#7fffaa}
+.stat .val.bad{color:#ffa0a0}
+/* Form */
+.field{margin-bottom:16px}
+.field label{display:block;font-size:.74rem;font-weight:700;color:#c4a0ff;margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em}
+.field input{width:100%;background:rgba(140,80,240,.07);border:1px solid rgba(140,80,240,.2);border-radius:12px;padding:12px 16px;color:var(--text);font-size:.92rem;font-family:inherit;outline:none;transition:.22s}
+.field input:focus{border-color:#8c50f0;box-shadow:0 0 0 3px rgba(140,80,240,.13)}
+.field input::placeholder{color:var(--text-dim)}
+.key-input{font-family:'Courier New',monospace;font-size:.85rem;letter-spacing:.04em}
+.key-status{font-size:.78rem;margin-top:6px;min-height:16px}
+.key-status.ok{color:#7fffaa}
+.key-status.erro{color:#ffa0a0}
+.key-status.loading{color:var(--text-dim)}
+.btn-prim{padding:12px 24px;border:none;border-radius:12px;background:linear-gradient(135deg,#8c50f0,#6d32c8);color:#fff;font-size:.9rem;font-weight:700;font-family:inherit;cursor:pointer;transition:.22s}
+.btn-prim:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(140,80,240,.42)}
+.btn-prim:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.msg{padding:11px 15px;border-radius:11px;font-size:.84rem;margin-top:14px;display:none;line-height:1.5}
+.msg.erro{background:rgba(237,66,69,.1);border:1px solid rgba(237,66,69,.25);color:#ffa0a0}
+.msg.ok{background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.22);color:#7fffaa}
+.spinner{text-align:center;padding:60px 0;color:var(--text-dim)}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas" data-accent="140,80,240"></canvas>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <a href="../" class="brand">
+      <img src="../nvst_logo.png" alt="NVST">
+      <div><span>NVST</span><sub> TECH</sub></div>
+    </a>
+    <button class="btn-sair" onclick="sair()">Sair <i class="fas fa-right-from-bracket" style="margin-left:4px;font-size:.75rem"></i></button>
+  </div>
+
+  <div id="spinner" class="spinner"><i class="fas fa-circle-notch fa-spin" style="font-size:1.4rem;color:#8c50f0"></i><p style="margin-top:12px;font-size:.85rem">Carregando sua conta...</p></div>
+
+  <div id="conteudo" style="display:none">
+
+    <!-- PLANO -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-star"></i> Meu Plano</div>
+      <div id="planoBadge" class="plano-badge sem"><i class="fas fa-circle" style="font-size:.5rem"></i> Sem plano ativo</div>
+      <div class="stats">
+        <div class="stat"><div class="lbl">Produto</div><div class="val" id="sProduto">—</div></div>
+        <div class="stat"><div class="lbl">Válido até</div><div class="val" id="sValidade">—</div></div>
+        <div class="stat"><div class="lbl">Dias restantes</div><div class="val" id="sDias">—</div></div>
+      </div>
+    </div>
+
+    <!-- ATIVAR KEY -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-key"></i> Ativar Key</div>
+      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:18px;line-height:1.65">
+        Cole uma key recebida no Discord para liberar ou <strong style="color:var(--text)">acumular mais 30 dias</strong> de acesso.
+      </p>
+      <div class="field">
+        <label>Key de acesso</label>
+        <input type="text" id="keyInput" class="key-input"
+               placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+               autocomplete="off" spellcheck="false">
+        <div class="key-status" id="keyStatus"></div>
+      </div>
+      <button class="btn-prim" id="btnAtivar" onclick="ativarKey()">
+        <i class="fas fa-bolt" style="margin-right:6px"></i>Ativar Key
+      </button>
+      <div id="msgKey" class="msg"></div>
+    </div>
+
+    <!-- TROCAR SENHA -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-lock"></i> Trocar Senha</div>
+      <div class="field">
+        <label>Senha atual</label>
+        <input type="password" id="senhaAtual" placeholder="••••••••">
+      </div>
+      <div class="field">
+        <label>Nova senha <span style="color:var(--text-faint);font-size:.72rem;text-transform:none;font-weight:400">— mín. 6 caracteres</span></label>
+        <input type="password" id="senhaNova" placeholder="••••••••" minlength="6">
+      </div>
+      <div class="field">
+        <label>Confirmar nova senha</label>
+        <input type="password" id="senhaConf" placeholder="••••••••">
+      </div>
+      <button class="btn-prim" id="btnSenha" onclick="trocarSenha()">
+        <i class="fas fa-floppy-disk" style="margin-right:6px"></i>Salvar nova senha
+      </button>
+      <div id="msgSenha" class="msg"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="../config.js"></script>
+<script src="../bg.js"></script>
+<script>
+const API      = NVST.API;
+const KEYS_API = NVST.KEYS;
+const token    = localStorage.getItem('nvst_token');
+if (!token) window.location.href = 'login.html';
+
+let uid = null, keyValida = false, keyTimer = null;
+
+async function carregarConta() {
+  try {
+    const r = await fetch(`${API}?action=me`, { headers: {'X-Auth-Token': token} });
+    const d = await r.json();
+    if (!d.ok || !d.authed) { localStorage.clear(); return window.location.href = 'login.html'; }
+    uid = d.user.id;
+
+    const rp = await fetch(`${API}?action=plano`, { headers: {'X-Auth-Token': token} });
+    const dp = await rp.json();
+
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('conteudo').style.display = 'block';
+
+    if (dp.ok && dp.plano) {
+      const badge = document.getElementById('planoBadge');
+      badge.className = 'plano-badge';
+      badge.innerHTML = `<i class="fas fa-circle-check" style="color:#7fffaa"></i> ${dp.plano}`;
+      document.getElementById('sProduto').textContent = dp.plano;
+      document.getElementById('sValidade').textContent = dp.expira_em
+        ? new Date(dp.expira_em).toLocaleDateString('pt-BR') : '—';
+      const diasEl = document.getElementById('sDias');
+      if (dp.dias_restantes !== null) {
+        diasEl.textContent = `${dp.dias_restantes} dia(s)`;
+        diasEl.className = 'val ' + (dp.status === 'expirado' ? 'bad' : dp.dias_restantes <= 5 ? 'warn' : 'ok');
+      }
+    }
+  } catch {
+    document.getElementById('spinner').textContent = 'Erro ao carregar. Recarregue a página.';
+  }
+}
+
+// Verificar key ao digitar
+document.getElementById('keyInput').addEventListener('input', e => {
+  const v = e.target.value.trim();
+  const el = document.getElementById('keyStatus');
+  clearTimeout(keyTimer); keyValida = false;
+  if (v.length < 30) { el.textContent = ''; return; }
+  el.className = 'key-status loading'; el.textContent = '⏳ Verificando...';
+  keyTimer = setTimeout(async () => {
+    try {
+      const r = await fetch(`${KEYS_API}?action=verificar&key=${encodeURIComponent(v)}`);
+      const d = await r.json();
+      if (d.ok && d.disponivel) {
+        el.className = 'key-status ok';
+        el.textContent = `✅ Key válida — produto: ${d.produto}`;
+        keyValida = true;
+      } else {
+        el.className = 'key-status erro';
+        el.textContent = d.error || '❌ Key inválida ou já utilizada.';
+      }
+    } catch { el.className = 'key-status erro'; el.textContent = '❌ Erro ao verificar.'; }
+  }, 600);
+});
+
+async function ativarKey() {
+  const key = document.getElementById('keyInput').value.trim();
+  if (!key)       return showMsg('msgKey', 'Cole sua key antes de ativar.', 'erro');
+  if (!keyValida) return showMsg('msgKey', 'Aguarde a verificação da key.', 'erro');
+  const btn = document.getElementById('btnAtivar');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Ativando...';
+  try {
+    const r = await fetch(`${KEYS_API}?action=ativar`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ key_code: key, usuario_id: uid })
+    });
+    const d = await r.json();
+    if (d.ok) {
+      const txt = d.acumulou
+        ? `✅ Tempo acumulado! Acesso até ${d.expira_em}`
+        : `✅ Key ativada! Acesso até ${d.expira_em}`;
+      showMsg('msgKey', txt, 'ok');
+      document.getElementById('keyInput').value = '';
+      document.getElementById('keyStatus').textContent = '';
+      keyValida = false;
+      setTimeout(carregarConta, 1200);
+    } else {
+      showMsg('msgKey', d.error || 'Erro ao ativar.', 'erro');
+    }
+  } catch { showMsg('msgKey', 'Erro de conexão.', 'erro'); }
+  finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-bolt" style="margin-right:6px"></i>Ativar Key'; }
+}
+
+async function trocarSenha() {
+  const atual = document.getElementById('senhaAtual').value;
+  const nova  = document.getElementById('senhaNova').value;
+  const conf  = document.getElementById('senhaConf').value;
+  if (!atual || !nova)  return showMsg('msgSenha', 'Preencha todos os campos.', 'erro');
+  if (nova !== conf)    return showMsg('msgSenha', 'As senhas não coincidem.', 'erro');
+  if (nova.length < 6)  return showMsg('msgSenha', 'Mínimo 6 caracteres.', 'erro');
+  const btn = document.getElementById('btnSenha');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Salvando...';
+  try {
+    const r = await fetch(`${API}?action=change_password`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','X-Auth-Token': token},
+      body: JSON.stringify({ senha_atual: atual, senha_nova: nova })
+    });
+    const d = await r.json();
+    if (d.ok) {
+      showMsg('msgSenha', '✅ Senha alterada com sucesso!', 'ok');
+      ['senhaAtual','senhaNova','senhaConf'].forEach(id => document.getElementById(id).value = '');
+    } else {
+      showMsg('msgSenha', d.error || 'Erro ao trocar a senha.', 'erro');
+    }
+  } catch { showMsg('msgSenha', 'Erro de conexão.', 'erro'); }
+  finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-floppy-disk" style="margin-right:6px"></i>Salvar nova senha'; }
+}
+
+async function sair() {
+  await fetch(`${API}?action=logout`, { method: 'POST', headers: {'X-Auth-Token': token} }).catch(() => {});
+  localStorage.clear();
+  window.location.href = 'login.html';
+}
+
+function showMsg(id, txt, tipo) {
+  const el = document.getElementById(id);
+  el.textContent = txt; el.className = `msg ${tipo}`; el.style.display = 'block';
+}
+
+carregarConta();
+</script>
+</body>
+</html>
