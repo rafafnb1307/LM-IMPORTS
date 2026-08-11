@@ -13,23 +13,23 @@
 .auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:34px;text-decoration:none}
 .auth-logo img{width:38px;height:38px;border-radius:50%;border:1px solid rgba(140,80,240,.35)}
 .auth-logo span{font-size:1rem;font-weight:800;letter-spacing:.06em;color:var(--text)}
-.auth-logo sub{font-size:.62rem;color:var(--text-faint);font-weight:500;letter-spacing:.06em}
+.auth-logo sub{font-size:.62rem;color:var(--text-faint,#3a2a5a);font-weight:500}
 .auth-title{font-size:1.7rem;font-weight:900;letter-spacing:-.02em;margin-bottom:6px}
-.auth-sub{color:var(--text-dim);font-size:.88rem;margin-bottom:34px;line-height:1.6}
+.auth-sub{color:var(--text-dim);font-size:.88rem;margin-bottom:34px}
 .field{margin-bottom:18px}
-.field label{display:block;font-size:.75rem;font-weight:700;color:var(--p-text,#c4a0ff);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
+.field label{display:block;font-size:.75rem;font-weight:700;color:#c4a0ff;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
 .field input{width:100%;background:rgba(140,80,240,.07);border:1px solid rgba(140,80,240,.22);border-radius:14px;padding:13px 16px;color:var(--text);font-size:.95rem;font-family:inherit;outline:none;transition:.25s}
-.field input:focus{border-color:var(--p1,#8c50f0);background:rgba(140,80,240,.13);box-shadow:0 0 0 3px rgba(140,80,240,.14)}
+.field input:focus{border-color:#8c50f0;background:rgba(140,80,240,.13);box-shadow:0 0 0 3px rgba(140,80,240,.14)}
 .field input::placeholder{color:var(--text-dim)}
 .btn-auth{width:100%;padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#8c50f0,#6d32c8);color:#fff;font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;transition:.25s;margin-top:6px}
 .btn-auth:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(140,80,240,.45)}
 .btn-auth:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.auth-divider{display:flex;align-items:center;gap:12px;margin:24px 0;color:var(--text-faint,#3a2a5a);font-size:.82rem}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:24px 0;color:var(--text-dim);font-size:.82rem}
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:rgba(140,80,240,.14)}
 .auth-link{text-align:center;font-size:.87rem;color:var(--text-dim)}
 .auth-link a{color:#c4a0ff;text-decoration:none;font-weight:600}
 .auth-link a:hover{color:#8c50f0}
-.msg{padding:12px 16px;border-radius:12px;font-size:.86rem;margin-bottom:18px;display:none;line-height:1.5}
+.msg{padding:12px 16px;border-radius:12px;font-size:.86rem;margin-bottom:18px;display:none}
 .msg.erro{background:rgba(237,66,69,.1);border:1px solid rgba(237,66,69,.28);color:#ffa0a0}
 .msg.ok{background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.25);color:#7fffaa}
 </style>
@@ -38,51 +38,38 @@
 <canvas id="bg-canvas" data-accent="140,80,240"></canvas>
 <div class="nebula nebula-1"></div>
 <div class="nebula nebula-2"></div>
-
 <div class="auth-wrap">
   <div class="auth-card">
     <a href="../" class="auth-logo">
       <img src="../nvst_logo.png" alt="NVST">
       <div><span>NVST</span><sub> TECH</sub></div>
     </a>
-
     <h1 class="auth-title">Bem-vindo de volta</h1>
     <p class="auth-sub">Entre na sua conta para acessar os projetos</p>
-
     <div id="msg" class="msg"></div>
-
-    <form id="form" onsubmit="return false">
-      <div class="field">
-        <label>E-mail</label>
-        <input type="email" id="email" placeholder="seuemail@gmail.com" required autocomplete="email">
-      </div>
-      <div class="field">
-        <label>Senha</label>
-        <input type="password" id="senha" placeholder="••••••••" required autocomplete="current-password">
-      </div>
-      <button class="btn-auth" id="btn" onclick="login()">Entrar</button>
-    </form>
-
+    <div class="field"><label>E-mail</label>
+      <input type="email" id="email" placeholder="seuemail@gmail.com" required autocomplete="email">
+    </div>
+    <div class="field"><label>Senha</label>
+      <input type="password" id="senha" placeholder="••••••••" required autocomplete="current-password">
+    </div>
+    <button class="btn-auth" id="btn" onclick="login()">Entrar</button>
     <div class="auth-divider">ou</div>
     <div class="auth-link">Não tem conta? <a href="register.html">Criar conta com key</a></div>
   </div>
 </div>
-
-<script src="../config.js"></script>
 <script src="../bg.js"></script>
 <script>
-const API = NVST.API;
-
+const API = '/api/monitor';
 async function login() {
   const btn   = document.getElementById('btn');
   const email = document.getElementById('email').value.trim();
   const senha = document.getElementById('senha').value;
   if (!email || !senha) return;
-
   btn.disabled = true; btn.textContent = 'Entrando...';
   try {
     const r = await fetch(`${API}?action=login`, {
-      method: 'POST', headers: {'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ email, password: senha })
     });
     const d = await r.json();
@@ -90,15 +77,11 @@ async function login() {
       localStorage.setItem('nvst_token', d.token);
       localStorage.setItem('nvst_user', JSON.stringify(d.user));
       window.location.href = 'conta.html';
-    } else {
-      msg(d.error || 'E-mail ou senha incorretos.', 'erro');
-    }
+    } else { msg(d.error || 'E-mail ou senha incorretos.', 'erro'); }
   } catch { msg('Erro de conexão. Tente novamente.', 'erro'); }
   finally { btn.disabled = false; btn.textContent = 'Entrar'; }
 }
-
-document.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
-
+document.addEventListener('keydown', e => { if (e.key==='Enter') login(); });
 function msg(txt, tipo) {
   const el = document.getElementById('msg');
   el.textContent = txt; el.className = `msg ${tipo}`; el.style.display = 'block';

@@ -10,34 +10,31 @@
 <style>
 .auth-wrap{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px}
 .auth-card{width:100%;max-width:460px;background:rgba(10,4,30,.88);border:1px solid rgba(140,80,240,.28);border-radius:28px;padding:44px 40px;backdrop-filter:blur(24px);box-shadow:0 0 80px rgba(140,80,240,.1)}
-.auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:34px;text-decoration:none}
+.auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:30px;text-decoration:none}
 .auth-logo img{width:38px;height:38px;border-radius:50%;border:1px solid rgba(140,80,240,.35)}
-.auth-logo span{font-size:1rem;font-weight:800;letter-spacing:.06em;color:var(--text)}
-.auth-logo sub{font-size:.62rem;color:var(--text-faint);font-weight:500}
-.auth-title{font-size:1.6rem;font-weight:900;letter-spacing:-.02em;margin-bottom:6px}
-.auth-sub{color:var(--text-dim);font-size:.88rem;margin-bottom:28px;line-height:1.6}
-.info-box{background:rgba(140,80,240,.07);border:1px solid rgba(140,80,240,.2);border-radius:14px;padding:14px 16px;font-size:.82rem;color:var(--text-dim);margin-bottom:24px;line-height:1.65}
+.auth-logo span{font-size:1rem;font-weight:800;color:var(--text)}
+.auth-logo sub{font-size:.62rem;color:var(--text-faint,#3a2a5a)}
+.auth-title{font-size:1.6rem;font-weight:900;margin-bottom:6px}
+.auth-sub{color:var(--text-dim);font-size:.88rem;margin-bottom:22px}
+.info-box{background:rgba(140,80,240,.07);border:1px solid rgba(140,80,240,.2);border-radius:12px;padding:13px 15px;font-size:.82rem;color:var(--text-dim);margin-bottom:22px;line-height:1.65}
 .info-box strong{color:#c4a0ff}
-.field{margin-bottom:16px}
-.field label{display:block;font-size:.75rem;font-weight:700;color:#c4a0ff;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
-.field label span{color:var(--text-faint);font-weight:400;text-transform:none;font-size:.75rem}
-.field input{width:100%;background:rgba(140,80,240,.07);border:1px solid rgba(140,80,240,.22);border-radius:14px;padding:13px 16px;color:var(--text);font-size:.95rem;font-family:inherit;outline:none;transition:.25s}
-.field input:focus{border-color:#8c50f0;background:rgba(140,80,240,.13);box-shadow:0 0 0 3px rgba(140,80,240,.14)}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:.74rem;font-weight:700;color:#c4a0ff;margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em}
+.field label span{color:var(--text-faint,#3a2a5a);font-weight:400;text-transform:none;font-size:.75rem}
+.field input{width:100%;background:rgba(140,80,240,.07);border:1px solid rgba(140,80,240,.22);border-radius:13px;padding:12px 15px;color:var(--text);font-size:.93rem;font-family:inherit;outline:none;transition:.25s}
+.field input:focus{border-color:#8c50f0;box-shadow:0 0 0 3px rgba(140,80,240,.14)}
 .field input::placeholder{color:var(--text-dim)}
-.key-input{font-family:'Courier New',monospace;font-size:.87rem;letter-spacing:.04em}
-.key-status{font-size:.8rem;margin-top:6px;min-height:18px;transition:.2s}
-.key-status.ok{color:#7fffaa}
-.key-status.erro{color:#ffa0a0}
-.key-status.loading{color:var(--text-dim)}
-.btn-auth{width:100%;padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#8c50f0,#6d32c8);color:#fff;font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;transition:.25s;margin-top:6px}
+.key-input{font-family:'Courier New',monospace;font-size:.86rem;letter-spacing:.04em}
+.key-status{font-size:.79rem;margin-top:5px;min-height:17px}
+.key-status.ok{color:#7fffaa}.key-status.erro{color:#ffa0a0}.key-status.loading{color:var(--text-dim)}
+.btn-auth{width:100%;padding:13px;border:none;border-radius:14px;background:linear-gradient(135deg,#8c50f0,#6d32c8);color:#fff;font-size:.97rem;font-weight:700;font-family:inherit;cursor:pointer;transition:.25s;margin-top:4px}
 .btn-auth:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(140,80,240,.45)}
 .btn-auth:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.auth-divider{display:flex;align-items:center;gap:12px;margin:24px 0;color:var(--text-faint);font-size:.82rem}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--text-dim);font-size:.82rem}
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:rgba(140,80,240,.14)}
 .auth-link{text-align:center;font-size:.87rem;color:var(--text-dim)}
 .auth-link a{color:#c4a0ff;text-decoration:none;font-weight:600}
-.auth-link a:hover{color:#8c50f0}
-.msg{padding:12px 16px;border-radius:12px;font-size:.86rem;margin-bottom:18px;display:none;line-height:1.5}
+.msg{padding:12px 15px;border-radius:12px;font-size:.85rem;margin-bottom:16px;display:none;line-height:1.5}
 .msg.erro{background:rgba(237,66,69,.1);border:1px solid rgba(237,66,69,.28);color:#ffa0a0}
 .msg.ok{background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.25);color:#7fffaa}
 </style>
@@ -46,130 +43,89 @@
 <canvas id="bg-canvas" data-accent="140,80,240"></canvas>
 <div class="nebula nebula-1"></div>
 <div class="nebula nebula-2"></div>
-
 <div class="auth-wrap">
   <div class="auth-card">
     <a href="../" class="auth-logo">
       <img src="../nvst_logo.png" alt="NVST">
       <div><span>NVST</span><sub> TECH</sub></div>
     </a>
-
     <h1 class="auth-title">Criar conta</h1>
     <p class="auth-sub">Preencha seus dados e ative sua key de acesso</p>
-
-    <div class="info-box">
-      💡 A <strong>key de acesso</strong> é enviada pelo bot no Discord após a compra — aparece no privado (DM) e também no ticket de compra.
-    </div>
-
+    <div class="info-box">💡 A <strong>key de acesso</strong> é enviada pelo bot no Discord após a compra — aparece no privado (DM) e no ticket.</div>
     <div id="msg" class="msg"></div>
-
-    <form onsubmit="return false">
-      <div class="field">
-        <label>Nome</label>
-        <input type="text" id="nome" placeholder="Seu nome" required autocomplete="name">
-      </div>
-      <div class="field">
-        <label>E-mail</label>
-        <input type="email" id="email" placeholder="seuemail@gmail.com" required autocomplete="email">
-      </div>
-      <div class="field">
-        <label>Senha <span>— mínimo 6 caracteres</span></label>
-        <input type="password" id="senha" placeholder="••••••••" required autocomplete="new-password" minlength="6">
-      </div>
-      <div class="field">
-        <label>Confirmar senha</label>
-        <input type="password" id="senhaConf" placeholder="••••••••" required autocomplete="new-password">
-      </div>
-      <div class="field">
-        <label>Key de acesso <span>— recebida no Discord após a compra</span></label>
-        <input type="text" id="key" class="key-input"
-               placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-               autocomplete="off" spellcheck="false">
-        <div class="key-status" id="keyStatus"></div>
-      </div>
-      <button class="btn-auth" id="btn" onclick="registrar()">Criar conta</button>
-    </form>
-
+    <div class="field"><label>Nome</label>
+      <input type="text" id="nome" placeholder="Seu nome" required autocomplete="name">
+    </div>
+    <div class="field"><label>E-mail</label>
+      <input type="email" id="email" placeholder="seuemail@gmail.com" required autocomplete="email">
+    </div>
+    <div class="field"><label>Senha <span>— mínimo 6 caracteres</span></label>
+      <input type="password" id="senha" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+    </div>
+    <div class="field"><label>Confirmar senha</label>
+      <input type="password" id="senhaConf" placeholder="••••••••" required autocomplete="new-password">
+    </div>
+    <div class="field"><label>Key de acesso <span>— recebida no Discord após a compra</span></label>
+      <input type="text" id="key" class="key-input" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+      <div class="key-status" id="keyStatus"></div>
+    </div>
+    <button class="btn-auth" id="btn" onclick="registrar()">Criar conta</button>
     <div class="auth-divider">ou</div>
     <div class="auth-link">Já tem conta? <a href="login.html">Entrar</a></div>
   </div>
 </div>
-
-<script src="../config.js"></script>
 <script src="../bg.js"></script>
 <script>
-const API      = NVST.API;
-const KEYS_API = NVST.KEYS;
-let keyValida  = false;
-let keyTimer   = null;
+const API = '/api/monitor', KEYS = '/api/keys';
+let keyValida = false, keyTimer = null;
 
 document.getElementById('key').addEventListener('input', e => {
-  const v  = e.target.value.trim();
-  const el = document.getElementById('keyStatus');
+  const v = e.target.value.trim(), el = document.getElementById('keyStatus');
   clearTimeout(keyTimer); keyValida = false;
   if (v.length < 30) { el.textContent = ''; return; }
   el.className = 'key-status loading'; el.textContent = '⏳ Verificando...';
   keyTimer = setTimeout(async () => {
     try {
-      const r = await fetch(`${KEYS_API}?action=verificar&key=${encodeURIComponent(v)}`);
+      const r = await fetch(`${KEYS}?action=verificar&key=${encodeURIComponent(v)}`);
       const d = await r.json();
-      if (d.ok && d.disponivel) {
-        el.className = 'key-status ok';
-        el.textContent = `✅ Key válida — produto: ${d.produto}`;
-        keyValida = true;
-      } else {
-        el.className = 'key-status erro';
-        el.textContent = d.error || '❌ Key inválida ou já utilizada.';
-      }
+      if (d.ok && d.disponivel) { el.className = 'key-status ok'; el.textContent = `✅ Key válida — ${d.produto}`; keyValida = true; }
+      else { el.className = 'key-status erro'; el.textContent = d.error || '❌ Key inválida ou já utilizada.'; }
     } catch { el.className = 'key-status erro'; el.textContent = '❌ Erro ao verificar.'; }
   }, 600);
 });
 
 async function registrar() {
-  const btn      = document.getElementById('btn');
-  const nome     = document.getElementById('nome').value.trim();
-  const email    = document.getElementById('email').value.trim();
-  const senha    = document.getElementById('senha').value;
-  const senhaConf= document.getElementById('senhaConf').value;
-  const key      = document.getElementById('key').value.trim();
-
+  const btn = document.getElementById('btn');
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const senha = document.getElementById('senha').value;
+  const senhaConf = document.getElementById('senhaConf').value;
+  const key = document.getElementById('key').value.trim();
   if (senha !== senhaConf) return msg('As senhas não coincidem.', 'erro');
-  if (key && !keyValida)   return msg('Verifique a key antes de continuar.', 'erro');
-
+  if (key && !keyValida) return msg('Verifique a key antes de continuar.', 'erro');
   btn.disabled = true; btn.textContent = 'Criando conta...';
   try {
     const r = await fetch(`${API}?action=register`, {
-      method: 'POST', headers: {'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ nome, email, password: senha })
     });
     const d = await r.json();
     if (!d.ok) return msg(d.error || 'Erro ao criar conta.', 'erro');
-
     localStorage.setItem('nvst_token', d.token);
     localStorage.setItem('nvst_user', JSON.stringify(d.user));
-
     if (key) {
       btn.textContent = 'Ativando key...';
-      const rk = await fetch(`${KEYS_API}?action=ativar`, {
-        method: 'POST', headers: {'Content-Type':'application/json'},
+      const rk = await fetch(`${KEYS}?action=ativar`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ key_code: key, usuario_id: d.user.id })
       });
       const dk = await rk.json();
-      if (dk.ok) {
-        msg(`✅ Conta criada e key ativada! Acesso até ${dk.expira_em}`, 'ok');
-        setTimeout(() => window.location.href = 'conta.html', 2200);
-      } else {
-        msg(`Conta criada! Porém a key falhou: ${dk.error}`, 'erro');
-        setTimeout(() => window.location.href = 'conta.html', 3000);
-      }
-    } else {
-      msg('✅ Conta criada! Você pode ativar uma key na sua conta depois.', 'ok');
-      setTimeout(() => window.location.href = 'conta.html', 2000);
-    }
+      msg(dk.ok ? `✅ Conta criada! Acesso até ${dk.expira_em}` : `Conta criada, mas key falhou: ${dk.error}`, dk.ok ? 'ok' : 'erro');
+    } else { msg('✅ Conta criada! Ative uma key na sua conta depois.', 'ok'); }
+    setTimeout(() => window.location.href = 'conta.html', 2200);
   } catch { msg('Erro de conexão. Tente novamente.', 'erro'); }
   finally { btn.disabled = false; btn.textContent = 'Criar conta'; }
 }
-
 function msg(txt, tipo) {
   const el = document.getElementById('msg');
   el.textContent = txt; el.className = `msg ${tipo}`; el.style.display = 'block';
