@@ -7,7 +7,7 @@ const NVST = {
     // URL base da API no seu VPS (com https://)
     // Exemplo: 'https://nvsttech.com.br'
     //      ou: 'https://minha-vps.com'
-    VPS: 'https://SEU_DOMINIO_AQUI',
+    VPS: 'https://nvst-tech.vercel.app',
 
     // Montado automaticamente — não precisa editar
     get API()  { return this.VPS + '/api/monitor.php'; },
